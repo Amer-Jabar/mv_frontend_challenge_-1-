@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
-
+import { useDispatch, useSelector } from "react-redux";
+import { deposit, withdraw } from "../../redux/balanceSlice";
 
 const Account = () => {
 
-    const [balance, setBalance] = useState(100);
+    const balance = useSelector(state => state.balance);
     const [form, setForm] = useState({
         deposit: false,
         withdraw: false
     })
     const [userId, setUserId] = useState(null);
     const [balanceValueChange, setBalanceValueChange] = useState(0);
+    
+    const dispatch = useDispatch();
 
     useEffect(() => setUserId(crypto.randomUUID()), [])
     useEffect(() => {}, [form])
@@ -64,7 +67,7 @@ const Account = () => {
                             <button
                             class='m-5 bg-cyan-50 px-8 py-3 rounded-lg'
                             onClick={() => {
-                                setBalance(Number(balance) + Number(balanceValueChange));
+                                dispatch(deposit(Number(balanceValueChange)))
                                 setForm({
                                     ...form,
                                     deposit: false
@@ -89,12 +92,12 @@ const Account = () => {
                             class='p-2 m-1'
                             type="text"
                             placeholder="20$"
-                            onChange={e => setBalanceValueChange(-e.target.value)}
+                            onChange={e => setBalanceValueChange(e.target.value)}
                             />
                             <button
                             class='m-5 bg-cyan-50 px-8 py-3 rounded-lg'
                             onClick={() => {
-                                setBalance(Number(balance) + Number(balanceValueChange));
+                                dispatch(withdraw(Number(balanceValueChange)))
                                 setForm({
                                     ...form,
                                     withdraw: false
